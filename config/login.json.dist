@@ -1,0 +1,5 @@
+{
+  "email"        : "yolo",
+  "password"     : "yala",
+  "data-browser" : "{\"0\":{\"0\":{},\"length\":1,\"description\":\"\",\"filename\":\"mhjfbmdgcfjbbpaeojofohoefgiehjai\",\"name\":\"Chromium PDF Viewer\"},\"1\":{\"0\":{},\"1\":{},\"length\":2,\"description\":\"Shockwave Flash 14.0 r0\",\"filename\":\"libpepflashplayer.so\",\"name\":\"Shockwave Flash\"},\"2\":{\"0\":{},\"length\":1,\"description\":\"This plugin allows you to securely access other computers that have been shared with you. To use this plugin you must first install the <a href=\"https://chrome.google.com/remotedesktop\">Chrome Remote Desktop</a> webapp.\",\"filename\":\"internal-remoting-viewer\",\"name\":\"Chromoting Viewer\"},\"3\":{\"0\":{},\"length\":1,\"description\":\"\",\"filename\":\"libppgoogletalk.so\",\"name\":\"Google Talk Plugin\"},\"4\":{\"0\":{},\"length\":1,\"description\":\"\",\"filename\":\"libppo1d.so\",\"name\":\"Google Talk Plugin Video Renderer\"},\"5\":{\"0\":{},\"length\":1,\"description\":\"Portable Document Format\",\"filename\":\"internal-pdf-viewer\",\"name\":\"Chromium PDF Viewer\"},\"length\":6}"
+}
