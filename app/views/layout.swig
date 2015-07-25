@@ -8,10 +8,16 @@
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-  {% block content %}{% endblock %}
-  {% if ENV_DEVELOPMENT %}
-    <script src="http://localhost:35729/livereload.js"></script>
-  {% endif %}
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <div class="container-fluid">
+    <div class="col-sm-12">
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+  {% block javascripts %}
+    {% if ENV_DEVELOPMENT %}
+      <script src="http://localhost:35729/livereload.js"></script>
+    {% endif %}
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  {% endblock %}
 </body>
 </html>
