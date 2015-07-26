@@ -12,7 +12,7 @@ var Client = {
   token : '',
   login : function(callback) {
     request.post({
-      url  :'http://asylamba.com/action/a-connect',
+      url  : 'http://asylamba.com/action/a-connect',
       form : {
         'data-browser'   : loginConfig['data-browser'],
         'email'          : loginConfig.email,
@@ -34,7 +34,7 @@ var Client = {
   },
   connect: function(callback) {
     request.get({
-      url     :'http://asylamba.com/action/a-serverconnection/server-7?',
+      url     : 'http://asylamba.com/action/a-serverconnection/server-7?',
       headers : {
         'User-Agent' : 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/43.0.2357.130 Chrome/43.0.2357.130 Safari/537.36',
         'Origin'     :'http://asylamba.com',
@@ -51,7 +51,7 @@ var Client = {
   },
   getToken: function(callback) {
     request.get({
-      url     :'http://game.asylamba.com/s7/bases/view-generator',
+      url     : 'http://game.asylamba.com/s7/bases/view-generator',
       headers : {
         'User-Agent' : 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/43.0.2357.130 Chrome/43.0.2357.130 Safari/537.36',
         'Host'       :'game.asylamba.com',
@@ -71,7 +71,7 @@ var Client = {
   },
   buildAction: function(options, callback) {
     request.get({
-      url     :'http://game.asylamba.com/s7/action/a-buildbuilding/baseid-' + options.baseId + '/building-' + options.building + '/token-' + Client.token + '/sftr-1',
+      url     : 'http://game.asylamba.com/s7/action/a-buildbuilding/baseid-' + options.baseId + '/building-' + options.building + '/token-' + Client.token + '/sftr-1',
       headers : {
         'User-Agent' : 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/43.0.2357.130 Chrome/43.0.2357.130 Safari/537.36',
         'Host'       :'game.asylamba.com',
@@ -90,7 +90,7 @@ var Client = {
   },
   buildShipAction: function(options, callback) {
     request.get({
-      url     :'http://game.asylamba.com/s7/action/a-buildship/baseid-' + options.baseId + '/ship-' + options.ship + '/quantity-' + options.quantity + '/token-' + Client.token + '/sftr-1',
+      url     : 'http://game.asylamba.com/s7/action/a-buildship/baseid-' + options.baseId + '/ship-' + options.ship + '/quantity-' + options.quantity + '/token-' + Client.token + '/sftr-1',
       headers : {
         'User-Agent' : 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/43.0.2357.130 Chrome/43.0.2357.130 Safari/537.36',
         'Host'       :'game.asylamba.com',
@@ -107,9 +107,28 @@ var Client = {
       }
     });
   },
+  lootAction: function(options, callback) {
+    request.get({
+      url     : 'http://game.asylamba.com/s7/action/a-loot/commanderid-' + options.commanderId + '/placeid-' + options.placeId + '/token-' + Client.token,
+      headers : {
+        'User-Agent' : 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/43.0.2357.130 Chrome/43.0.2357.130 Safari/537.36',
+        'Host'       :'game.asylamba.com',
+        'Referer'    :'http://game.asylamba.com/s7/map'
+      }
+    }, function(err, httpResponse, body){
+      // console.log(err);
+      // console.log(httpResponse.statusCode);
+      // console.log(httpResponse.statusMessage);
+      var response = body.match(/<ul id="alert-content"><li data-type="\d+">(.*?)<\/li><\/ul>/i);
+      console.log(response[1]);
+      if (typeof callback === "function") {
+        callback(response[1]);
+      }
+    });
+  },
   searchAction: function(options, callback) {
     request.get({
-      url     :'http://game.asylamba.com/s7/action/a-buildtechno/baseid-' + options.baseId + '/techno-' + options.techno + '/token-' + Client.token + '/sftr-1',
+      url     : 'http://game.asylamba.com/s7/action/a-buildtechno/baseid-' + options.baseId + '/techno-' + options.techno + '/token-' + Client.token + '/sftr-1',
       headers : {
         'User-Agent' : 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/43.0.2357.130 Chrome/43.0.2357.130 Safari/537.36',
         'Host'       :'game.asylamba.com',
@@ -158,6 +177,10 @@ var Client = {
             case "buildship":
               console.log("Ship Building task");
               Client.buildShipAction(task.options, callback);
+              break;
+            case "loot":
+              console.log("Looting task");
+              Client.lootAction(task.options, callback);
               break;
           }
         });

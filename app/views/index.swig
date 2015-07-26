@@ -18,6 +18,7 @@
         <option value="buildbuilding">Construire un bâtiment</option>
         <option value="buildtechno">Rechercher une techonologie</option>
         <option value="buildship">Construire un vaisseau</option>
+        <option value="loot">Piller une planète</option>
       </select>
     </div>
     <div class="form-group next-select" style="display:none;" id="buildbuilding">
@@ -53,9 +54,19 @@
         <input type="number" class="form-control" name="quantity" id="quantity" placeholder="Quantité" value="1">
       </div>
     </div>
-    <div class="form-group">
+    <div class="next-select" style="display:none;" id="loot">
+      <div class="form-group">
+        <label for="commanderId">ID du Commandant</label>
+        <input type="number" class="form-control" name="commanderId" id="commanderId" placeholder="ID du Commandant" value="308">
+      </div>
+      <div class="form-group">
+        <label for="placeId">ID Destination</label>
+        <input type="number" class="form-control" name="placeId" id="placeId" placeholder="ID Destination" value="16393">
+      </div>
+    </div>
+    <div class="form-group" id="baseIdDiv">
       <label for="baseId">ID de la base</label>
-      <input type="text" class="form-control" name="baseId" id="baseId" placeholder="ID de la base" value="16309" required="required">
+      <input type="text" class="form-control" name="baseId" id="baseId" placeholder="ID de la base" value="16309">
     </div>
     <div class="form-group">
       <label for="executionTime">Date</label>
@@ -85,11 +96,13 @@
           <tr>
             <td>
               {% if task.type == 'buildbuilding' %}
-                Construction {{ buildings[task.options.building] }} sur {{ task.options.baseId }}
+                Construction {{ buildings[task.options.building] }} sur <a href="http://game.asylamba.com/s7/action/a-switchbase/base-{{ task.options.baseId }}/page-generator">{{ task.options.baseId }}</a>
               {% elseif task.type == 'buildtechno' %}
-                Recherche {{ technos[task.options.techno] }} sur {{ task.options.baseId }}
+                Recherche {{ technos[task.options.techno] }} sur <a href="http://game.asylamba.com/s7/action/a-switchbase/base-{{ task.options.baseId }}/page-generator">{{ task.options.baseId }}</a>
               {% elseif task.type == 'buildship' %}
-                Construction {{ task.options.quantity }} {{ ships[task.options.ship] }} sur {{ task.options.baseId }}
+                Construction {{ task.options.quantity }} {{ ships[task.options.ship] }} sur <a href="http://game.asylamba.com/s7/action/a-switchbase/base-{{ task.options.baseId }}/page-generator">{{ task.options.baseId }}</a>
+              {% elseif task.type == 'loot' %}
+                Pillage de <a href="http://game.asylamba.com/s7/map/place-{{ task.options.placeId }}">{{ task.options.placeId }}</a> par {{ task.options.commanderId }}
               {% endif %}
             </td>
             <td>{{task.executionTime|datetime}}, {{task.executionTime|dateFromNow}}</td>
@@ -117,8 +130,13 @@
       $(function () {
           $('#datetimepicker').datetimepicker();
           $('#taskType').change(function(e) {
-            $('.next-select').hide(500, function() {
+            $('.next-select[id!="' + $(e.target).val() + '"]').hide(500, function() {
               $('#' + $(e.target).val()).show(500);
+              if ($(e.target).val() == "loot") {
+                $('#baseIdDiv').hide(500);
+              } else if ($('#baseIdDiv').is(':hidden')) {
+                $('#baseIdDiv').show(500);
+              }
             });
           });
           $('.select2').select2();

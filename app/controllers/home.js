@@ -46,6 +46,10 @@ router.post('/add-task', function (req, res, next) {
       options.ship     = req.body.ship;
       options.quantity = req.body.quantity;
       break;
+    case 'loot':
+      options.commanderId = req.body.commanderId;
+      options.placeId     = req.body.placeId;
+      break;
     default:
       // temporary error handling
       throw "Invalid task type";
