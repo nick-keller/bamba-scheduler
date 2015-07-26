@@ -3,6 +3,8 @@
 {% block stylesheets %}
   {% parent %}
   <link rel="stylesheet" href="/components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2-bootstrap.css" />
 {% endblock %}
 
 {% block content %}
@@ -11,26 +13,38 @@
   <form method="post" action="/add-task">
     <div class="form-group">
       <label for="taskType">Type de tâche</label>
-      <select id="taskType" name="taskType" class="form-control">
-        <option value="build">Construire un bâtiment</option>
+      <select id="taskType" name="taskType" class="form-control" required="required">
+        <option>-- Sélectionner --</option>
+        <option value="buildbuilding">Construire un bâtiment</option>
+        <option value="buildtechno">Rechercher une techonologie</option>
       </select>
     </div>
-    <div class="form-group">
+    <div class="form-group next-select" style="display:none;" id="buildbuilding">
       <label for="building">Bâtiment à construire</label>
-      <select id="building" name="building" class="form-control">
+      <select id="building" name="building" class="form-control select2">
+        <option>-- Sélectionner --</option>
         {% for building in buildings %}
           <option value="{{ loop.key }}">{{ building }}</option>
         {% endfor %}
       </select>
     </div>
+    <div class="form-group next-select" style="display:none;" id="buildtechno">
+      <label for="technoSelect">Recherche à faire</label>
+      <select id="technoSelect" name="techno" class="form-control select2">
+        <option>-- Sélectionner --</option>
+        {% for techno in technos %}
+          <option value="{{ loop.key }}">{{ techno }}</option>
+        {% endfor %}
+      </select>
+    </div>
     <div class="form-group">
       <label for="baseId">ID de la base</label>
-      <input type="text" class="form-control" name="baseId" id="baseId" placeholder="ID de la base" value="16309">
+      <input type="text" class="form-control" name="baseId" id="baseId" placeholder="ID de la base" value="16309" required="required">
     </div>
     <div class="form-group">
       <label for="executionTime">Date</label>
       <div class="input-group date" id='datetimepicker'>
-          <input type="text" class="form-control" name="executionTime" id="executionTime" />
+          <input type="text" class="form-control" name="executionTime" id="executionTime" required="required" />
           <span class="input-group-addon">
               <span class="glyphicon glyphicon-calendar"></span>
           </span>
@@ -54,8 +68,10 @@
         {% for task in tasks %}
           <tr>
             <td>
-              {% if task.type == 'build' %}
+              {% if task.type == 'buildbuilding' %}
                 Construction {{ buildings[task.options.building] }} sur {{ task.options.baseId }}
+              {% elseif task.type == 'buildtechno' %}
+                Recherche {{ technos[task.options.techno] }} sur {{ task.options.baseId }}
               {% endif %}
             </td>
             <td>{{task.executionTime|datetime}}, {{task.executionTime|dateFromNow}}</td>
@@ -78,9 +94,16 @@
   <script type="text/javascript" src="/components/moment/min/moment.min.js"></script>
   <script type="text/javascript" src="/components/moment/locale/fr.js"></script>
   <script type="text/javascript" src="/components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.min.js"></script>
   <script type="text/javascript">
       $(function () {
           $('#datetimepicker').datetimepicker();
+          $('#taskType').change(function(e) {
+            $('.next-select').hide(500, function() {
+              $('#' + $(e.target).val()).show(500);
+            });
+          });
+          $('.select2').select2();
       });
   </script>
 {% endblock %}

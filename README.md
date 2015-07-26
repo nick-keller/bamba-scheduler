@@ -5,9 +5,12 @@ TO-DO List
 - [x] Basic task system with building task
 - [ ] Task type
   - [x] Building task
-  - [ ] Science researching task
-  - [ ] Attacking task
-- [ ] More errors preventions
+  - [x] Science researching task
+  - [ ] Ship Building task
+  - [ ] Looting task
+  - [ ] Colonization task & Conquest task
+- [ ] Better errors handling & validation
+- [ ] Better structure
 - [ ] Repetitive task
 - [ ] Logout possibility
 - [ ] Multi-user

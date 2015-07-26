@@ -4,6 +4,8 @@ var express = require('express'),
   moment    = require('moment'),
   schedule  = require('node-schedule'),
   Client    = require('../models/client'),
+  technos   = require('../models/technos.json'),
+  buildings = require('../models/buildings.json'),
   Task      = mongoose.model('Task');
 
 module.exports = function (app) {
@@ -11,41 +13,50 @@ module.exports = function (app) {
 };
 
 router.get('/', function (req, res, next) {
-  Task.find(function (err, tasks) {
+  Task.find({$query: {}, $orderby: {executionTime : -1}}, function (err, tasks) {
     if (err) return next(err);
     res.render('index', {
-      title: 'Planificateur bamba',
-      tasks: tasks,
-      buildings: {
-        0: "Générateur",
-        1: "Raffinerie",
-        2: "Chantier Alpha",
-        5: "Technosphère",
-        6: "Plateforme Commerciale",
-        8: "Centre de Recyclage",
-        7: "Stockage",
-        9: "Spatioport",
-        3: "Chantier de Ligne"
-      }
+      title     : 'Planificateur bamba',
+      tasks     : tasks,
+      buildings : buildings,
+      technos   : technos
     });
   });
 });
 
 router.post('/add-task', function (req, res, next) {
   console.log(req.body);
-  var date = moment(req.body.executionTime, "DD/MM/YYYY HH:mm");
+  var date = moment(req.body.executionTime, "DD/MM/YYYY HH:mm"),
+    options = {};
   console.log(date.toDate());
   console.log(date.fromNow());
+
+  switch (req.body.taskType) {
+    case 'buildbuilding':
+      options = {
+        baseId   : req.body.baseId,
+        building : req.body.building
+      };
+      break;
+    case 'buildtechno':
+      options = {
+        baseId : req.body.baseId,
+        techno : req.body.techno
+      };
+      break;
+    default:
+      // temporary error handling
+      throw "Invalid task type";
+  }
+
   var task = new Task({
     type          : req.body.taskType,
     executionTime : date.toDate(),
     repeat        : false,
     repeated      : 0,
-    options       : {
-      baseId   : req.body.baseId,
-      building : req.body.building
-    }
+    options       : options
   });
+
   task.save(function (err, task) {
     if (err)
       throw err;
