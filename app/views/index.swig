@@ -2,7 +2,7 @@
 
 {% block stylesheets %}
   {% parent %}
-  <link rel="stylesheet" href="/components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+  <link rel="stylesheet" href="components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2-bootstrap.css" />
 {% endblock %}
@@ -91,9 +91,9 @@
 
 {% block javascripts %}
   {% parent %}
-  <script type="text/javascript" src="/components/moment/min/moment.min.js"></script>
-  <script type="text/javascript" src="/components/moment/locale/fr.js"></script>
-  <script type="text/javascript" src="/components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+  <script type="text/javascript" src="components/moment/min/moment.min.js"></script>
+  <script type="text/javascript" src="components/moment/locale/fr.js"></script>
+  <script type="text/javascript" src="components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.min.js"></script>
   <script type="text/javascript">
       $(function () {
