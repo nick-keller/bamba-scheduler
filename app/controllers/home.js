@@ -62,5 +62,5 @@ router.post('/add-task', function (req, res, next) {
         Client.executeTask(id);
     }.bind(null, task._id));
   });
-  res.redirect('/');
+  res.redirect('back');
 });
