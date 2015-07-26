@@ -10,7 +10,7 @@
 {% block content %}
   <h1>{{ title }}</h1>
   <h3>Ajouter une tâche</h3>
-  <form method="post" action="/add-task">
+  <form method="post" action="add-task">
     <div class="form-group">
       <label for="taskType">Type de tâche</label>
       <select id="taskType" name="taskType" class="form-control" required="required">
