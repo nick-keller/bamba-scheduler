@@ -114,46 +114,31 @@ var Client = {
         throw err;
       console.log(task);
       console.log(task.type);
-      switch (task.type) {
-        case "buildbuilding":
-          console.log("Building task");
-          Client.login(function() {
-            console.log("login successful");
-            Client.getToken(function() {
-              console.log("Token obtained");
-              Client.buildAction(task.options, function(response) {
-                console.log("Task executed completly");
-                task.repeated++;
-                task.responses.push(response);
-                task.save(function (err) {
-                  if (err)
-                    throw err;
-                });
-              })
+      Client.login(function() {
+        console.log("login successful");
+        Client.getToken(function() {
+          console.log("Token obtained");
+          var callback = function(response) {
+            console.log("Task executed completly");
+            task.repeated++;
+            task.responses.push(response);
+            task.save(function (err) {
+              if (err)
+                throw err;
             });
-          });
-          break;
-        case "buildtechno":
-          console.log("Searching task");
-          Client.login(function() {
-            console.log("login successful");
-            Client.getToken(function() {
-              console.log("Token obtained");
-              Client.searchAction(task.options, function(response) {
-                console.log("Task executed completly");
-                task.repeated++;
-                task.responses.push(response);
-                task.save(function (err) {
-                  if (err)
-                    throw err;
-                });
-              })
-            });
-          });
-          break;
-        default:
-          console.log("Invalid task type");
-      }
+          };
+          switch (task.type) {
+            case "buildbuilding":
+              console.log("Building task");
+              Client.buildAction(task.options, callback);
+              break;
+            case "buildtechno":
+              console.log("Searching task");
+              Client.searchAction(task.options, callback);
+              break;
+          }
+        });
+      });
     });
   }
 };
