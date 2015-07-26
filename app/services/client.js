@@ -88,6 +88,25 @@ var Client = {
       }
     });
   },
+  buildShipAction: function(options, callback) {
+    request.get({
+      url     :'http://game.asylamba.com/s7/action/a-buildship/baseid-' + options.baseId + '/ship-' + options.ship + '/quantity-' + options.quantity + '/token-' + Client.token + '/sftr-1',
+      headers : {
+        'User-Agent' : 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/43.0.2357.130 Chrome/43.0.2357.130 Safari/537.36',
+        'Host'       :'game.asylamba.com',
+        'Referer'    :'http://game.asylamba.com/s7/bases/view-dock1'
+      }
+    }, function(err, httpResponse, body){
+      // console.log(err);
+      // console.log(httpResponse.statusCode);
+      // console.log(httpResponse.statusMessage);
+      var response = body.match(/<ul id="alert-content"><li data-type="\d+">(.*?)<\/li><\/ul>/i);
+      console.log(response[1]);
+      if (typeof callback === "function") {
+        callback(response[1]);
+      }
+    });
+  },
   searchAction: function(options, callback) {
     request.get({
       url     :'http://game.asylamba.com/s7/action/a-buildtechno/baseid-' + options.baseId + '/techno-' + options.techno + '/token-' + Client.token + '/sftr-1',
@@ -135,6 +154,10 @@ var Client = {
             case "buildtechno":
               console.log("Searching task");
               Client.searchAction(task.options, callback);
+              break;
+            case "buildship":
+              console.log("Ship Building task");
+              Client.buildShipAction(task.options, callback);
               break;
           }
         });

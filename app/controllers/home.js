@@ -6,6 +6,7 @@ var express = require('express'),
   Client    = require('../services/client'),
   technos   = require('../models/technos.json'),
   buildings = require('../models/buildings.json'),
+  ships     = require('../models/ships.json'),
   Task      = mongoose.model('Task');
 
 module.exports = function (app) {
@@ -19,7 +20,8 @@ router.get('/', function (req, res, next) {
       title     : 'Planificateur bamba',
       tasks     : tasks,
       buildings : buildings,
-      technos   : technos
+      technos   : technos,
+      ships     : ships
     });
   });
 });
@@ -39,6 +41,10 @@ router.post('/add-task', function (req, res, next) {
       break;
     case 'buildtechno':
       options.techno = req.body.techno;
+      break;
+    case 'buildship':
+      options.ship     = req.body.ship;
+      options.quantity = req.body.quantity;
       break;
     default:
       // temporary error handling

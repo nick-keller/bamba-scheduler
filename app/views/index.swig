@@ -17,6 +17,7 @@
         <option>-- Sélectionner --</option>
         <option value="buildbuilding">Construire un bâtiment</option>
         <option value="buildtechno">Rechercher une techonologie</option>
+        <option value="buildship">Construire un vaisseau</option>
       </select>
     </div>
     <div class="form-group next-select" style="display:none;" id="buildbuilding">
@@ -36,6 +37,21 @@
           <option value="{{ loop.key }}">{{ techno }}</option>
         {% endfor %}
       </select>
+    </div>
+    <div class="next-select" style="display:none;" id="buildship">
+      <div class="form-group">
+        <label for="shipSelect">Vaisseau à construire</label>
+        <select id="shipSelect" name="ship" class="form-control select2">
+          <option>-- Sélectionner --</option>
+          {% for ship in ships %}
+            <option value="{{ loop.key }}">{{ ship }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="quantity">Quantité</label>
+        <input type="number" class="form-control" name="quantity" id="quantity" placeholder="Quantité" value="1">
+      </div>
     </div>
     <div class="form-group">
       <label for="baseId">ID de la base</label>
@@ -72,6 +88,8 @@
                 Construction {{ buildings[task.options.building] }} sur {{ task.options.baseId }}
               {% elseif task.type == 'buildtechno' %}
                 Recherche {{ technos[task.options.techno] }} sur {{ task.options.baseId }}
+              {% elseif task.type == 'buildship' %}
+                Construction {{ task.options.quantity }} {{ ships[task.options.ship] }} sur {{ task.options.baseId }}
               {% endif %}
             </td>
             <td>{{task.executionTime|datetime}}, {{task.executionTime|dateFromNow}}</td>
