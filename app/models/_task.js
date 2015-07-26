@@ -7,7 +7,7 @@ var TaskSchema = new Schema({
   executionTime : Date,
   repeat        : Boolean,
   repeated      : Number,
-  response      : String
+  responses     : [String]
 });
 
 TaskSchema.virtual('createdAt')

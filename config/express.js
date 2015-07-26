@@ -1,19 +1,20 @@
-var express = require('express');
-var glob = require('glob');
-
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var compress = require('compression');
+var express        = require('express');
+var glob           = require('glob');
+var favicon        = require('serve-favicon');
+var logger         = require('morgan');
+var cookieParser   = require('cookie-parser');
+var bodyParser     = require('body-parser');
+var compress       = require('compression');
 var methodOverride = require('method-override');
-var swig = require('swig');
+var swig           = require('swig');
+var moment         = require('moment');
+moment.locale("fr");
 
 module.exports = function(app, config) {
   var env = process.env.NODE_ENV || 'development';
   app.locals.ENV = env;
   app.locals.ENV_DEVELOPMENT = env == 'development';
-  
+
   app.engine('swig', swig.renderFile);
   if(env == 'development'){
     app.set('view cache', false);
@@ -21,6 +22,19 @@ module.exports = function(app, config) {
   }
   app.set('views', config.root + '/app/views');
   app.set('view engine', 'swig');
+
+  swig.setFilter('length', function (input) {
+    return input.length;
+  });
+  swig.setFilter('datetime', function (input, format) {
+    if (format === undefined) {
+      format = "DD/MM/YYYY HH:mm";
+    }
+    return moment(input).format(format);
+  });
+  swig.setFilter('dateFromNow', function (input) {
+    return moment(input).fromNow();
+  });
 
   // app.use(favicon(config.root + '/public/img/favicon.ico'));
   app.use(logger('dev'));
@@ -43,7 +57,7 @@ module.exports = function(app, config) {
     err.status = 404;
     next(err);
   });
-  
+
   if(app.get('env') === 'development'){
     app.use(function (err, req, res, next) {
       res.status(err.status || 500);

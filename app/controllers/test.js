@@ -7,7 +7,12 @@ module.exports = function (app) {
 };
 
 router.get('/connect', function (req, res, next) {
-  Client.connect();
+  // Client.getToken(function() {
+  //   Client.buildAction({
+  //     baseid   : '16309',
+  //     building : '5'
+  //   });
+  // });
   return res.json({
     message: "Coucou"
   })
