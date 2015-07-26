@@ -3,10 +3,11 @@ var mongoose = require('mongoose'),
 
 var TaskSchema = new Schema({
   type          : String,
-  target        : String,
+  options       : Schema.Types.Mixed,
   executionTime : Date,
   repeat        : Boolean,
-  repeated      : Number
+  repeated      : Number,
+  response      : String
 });
 
 TaskSchema.virtual('createdAt')

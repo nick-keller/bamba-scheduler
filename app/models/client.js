@@ -7,7 +7,7 @@ var j               = request.jar(new FileCookieStore(rootPath + '/config/cookie
 var request         = request.defaults({jar:j});
 
 var Client = {
-  connect: function(callback) {
+  login: function(callback) {
     request.post({
       url  :'http://asylamba.com/action/a-connect',
       form : {
@@ -23,22 +23,27 @@ var Client = {
       }
     }, function(err, httpResponse, body){
       console.log(err);
-      console.log(httpResponse);
+      console.log(httpResponse.statusCode);
+      console.log(httpResponse.statusMessage);
       console.log(body);
-      request.get({
-        url     :'http://asylamba.com/action/a-serverconnection/server-7?',
-        headers : {
-          'User-Agent' : 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/43.0.2357.130 Chrome/43.0.2357.130 Safari/537.36',
-          'Origin'     :'http://asylamba.com',
-          'Referer'    :'http://asylamba.com/serveurs'
-        }
-      }, function(err, httpResponse, body){
-        console.log(err);
-        console.log(httpResponse);
-        if (typeof callback === "function") {
-          callback();
-        }
-      })
+      Client.connect(callback);
+    });
+  },
+  connect: function(callback) {
+    request.get({
+      url     :'http://asylamba.com/action/a-serverconnection/server-7?',
+      headers : {
+        'User-Agent' : 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/43.0.2357.130 Chrome/43.0.2357.130 Safari/537.36',
+        'Origin'     :'http://asylamba.com',
+        'Referer'    :'http://asylamba.com/serveurs'
+      }
+    }, function(err, httpResponse, body){
+      console.log(err);
+      console.log(httpResponse.statusCode);
+      console.log(httpResponse.statusMessage);
+      if (typeof callback === "function") {
+        callback();
+      }
     });
   }
 };
