@@ -3,7 +3,7 @@ var express = require('express'),
   mongoose  = require('mongoose'),
   moment    = require('moment'),
   schedule  = require('node-schedule'),
-  Client    = require('../models/client'),
+  Client    = require('../services/client'),
   technos   = require('../models/technos.json'),
   buildings = require('../models/buildings.json'),
   Task      = mongoose.model('Task');
@@ -26,23 +26,19 @@ router.get('/', function (req, res, next) {
 
 router.post('/add-task', function (req, res, next) {
   console.log(req.body);
-  var date = moment(req.body.executionTime, "DD/MM/YYYY HH:mm"),
-    options = {};
+  var date  = moment(req.body.executionTime, "DD/MM/YYYY HH:mm"),
+    options = {
+      baseId   : req.body.baseId
+    };
   console.log(date.toDate());
   console.log(date.fromNow());
 
   switch (req.body.taskType) {
     case 'buildbuilding':
-      options = {
-        baseId   : req.body.baseId,
-        building : req.body.building
-      };
+      options.building = req.body.building;
       break;
     case 'buildtechno':
-      options = {
-        baseId : req.body.baseId,
-        techno : req.body.techno
-      };
+      options.techno = req.body.techno;
       break;
     default:
       // temporary error handling
