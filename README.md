@@ -17,7 +17,7 @@ TO-DO List
   - [x] Building task
   - [x] Science researching task
   - [x] Ship Building task
-  - [ ] Looting task
+  - [x] Looting task
   - [ ] Colonization & Conquest task
 - [ ] Better errors handling & validation
 - [ ] Better structure
