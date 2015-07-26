@@ -2,3 +2,4 @@ node_modules/
 public/components
 .sass-cache
 config/login.json
+*.sublime-*
