@@ -1,5 +1,6 @@
 node_modules/
 public/components
+public/css/*.css
 .sass-cache
 config/login.json
 config/cookies.json
