@@ -5,3 +5,4 @@ public/css/*.css
 config/login.json
 config/cookies.json
 *.sublime-*
+.idea/
