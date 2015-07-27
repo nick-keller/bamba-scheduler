@@ -44,23 +44,6 @@ var Client = {
       // console.log(err);
       // console.log(httpResponse.statusCode);
       // console.log(httpResponse.statusMessage);
-      if (typeof callback === "function") {
-        callback();
-      }
-    });
-  },
-  getToken: function(callback) {
-    request.get({
-      url     : 'http://game.asylamba.com/s7/bases/view-generator',
-      headers : {
-        'User-Agent' : 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/43.0.2357.130 Chrome/43.0.2357.130 Safari/537.36',
-        'Host'       :'game.asylamba.com',
-        'Referer'    :'http://game.asylamba.com/s7/profil'
-      }
-    }, function(err, httpResponse, body){
-      // console.log(err);
-      // console.log(httpResponse.statusCode);
-      // console.log(httpResponse.statusMessage);
       var token = body.match(/Changer de bases<\/h2><div class="overflow"><a href="[^"]+token-(.*?)" class="active"><em>Colonie<\/em>/i);
       console.log(token[1]);
       Client.token = token[1];
@@ -69,6 +52,27 @@ var Client = {
       }
     });
   },
+  // getToken: function(callback) {
+  //   request.get({
+  //     url     : 'http://game.asylamba.com/s7/bases/view-generator',
+  //     headers : {
+  //       'User-Agent' : 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/43.0.2357.130 Chrome/43.0.2357.130 Safari/537.36',
+  //       'Host'       :'game.asylamba.com',
+  //       'Referer'    :'http://game.asylamba.com/s7/profil'
+  //     }
+  //   }, function(err, httpResponse, body){
+  //     console.log(err);
+  //     console.log(httpResponse.statusCode);
+  //     console.log(httpResponse.statusMessage);
+  //     console.log(body);
+  //     var token = body.match(/Changer de bases<\/h2><div class="overflow"><a href="[^"]+token-(.*?)" class="active"><em>Colonie<\/em>/i);
+  //     console.log(token);
+  //     Client.token = token[1];
+  //     if (typeof callback === "function") {
+  //       callback();
+  //     }
+  //   });
+  // },
   buildAction: function(options, callback) {
     request.get({
       url     : 'http://game.asylamba.com/s7/action/a-buildbuilding/baseid-' + options.baseId + '/building-' + options.building + '/token-' + Client.token + '/sftr-1',
@@ -79,12 +83,19 @@ var Client = {
       }
     }, function(err, httpResponse, body){
       // console.log(err);
-      // console.log(httpResponse.statusCode);
-      // console.log(httpResponse.statusMessage);
+      // console.log(httpResponse);
       var response = body.match(/<ul id="alert-content"><li data-type="\d+">(.*?)<\/li><\/ul>/i);
-      console.log(response[1]);
-      if (typeof callback === "function") {
-        callback(response[1]);
+      if (null === response) {
+        console.log("login failed");
+        Client.connect(function() {
+          Client.buildAction(options, callback);
+        });
+      } else {
+        console.log("login successful");
+        console.log(response[1]);
+        if (typeof callback === "function") {
+          callback(response[1]);
+        }
       }
     });
   },
@@ -101,9 +112,17 @@ var Client = {
       // console.log(httpResponse.statusCode);
       // console.log(httpResponse.statusMessage);
       var response = body.match(/<ul id="alert-content"><li data-type="\d+">(.*?)<\/li><\/ul>/i);
-      console.log(response[1]);
-      if (typeof callback === "function") {
-        callback(response[1]);
+      if (null === response) {
+        console.log("login failed");
+        Client.connect(function() {
+          Client.buildShipAction(options, callback);
+        });
+      } else {
+        console.log("login successful");
+        console.log(response[1]);
+        if (typeof callback === "function") {
+          callback(response[1]);
+        }
       }
     });
   },
@@ -118,11 +137,19 @@ var Client = {
     }, function(err, httpResponse, body){
       // console.log(err);
       // console.log(httpResponse.statusCode);
-      // console.log(httpResponse.statusMessage);
+      // console.log(httpResponse);
       var response = body.match(/<ul id="alert-content"><li data-type="\d+">(.*?)<\/li><\/ul>/i);
-      console.log(response[1]);
-      if (typeof callback === "function") {
-        callback(response[1]);
+      if (null === response) {
+        console.log("login failed");
+        Client.connect(function() {
+          Client.lootAction(options, callback);
+        });
+      } else {
+        console.log("login successful");
+        console.log(response[1]);
+        if (typeof callback === "function") {
+          callback(response[1]);
+        }
       }
     });
   },
@@ -139,9 +166,17 @@ var Client = {
       // console.log(httpResponse.statusCode);
       // console.log(httpResponse.statusMessage);
       var response = body.match(/<ul id="alert-content"><li data-type="\d+">(.*?)<\/li><\/ul>/i);
-      console.log(response[1]);
-      if (typeof callback === "function") {
-        callback(response[1]);
+      if (null === response) {
+        console.log("login failed");
+        Client.connect(function() {
+          Client.searchAction(options, callback);
+        });
+      } else {
+        console.log("login successful");
+        console.log(response[1]);
+        if (typeof callback === "function") {
+          callback(response[1]);
+        }
       }
     });
   },
@@ -153,37 +188,33 @@ var Client = {
       console.log(task);
       console.log(task.type);
       Client.login(function() {
-        console.log("login successful");
-        Client.getToken(function() {
-          console.log("Token obtained");
-          var callback = function(response) {
-            console.log("Task executed completly");
-            task.repeated++;
-            task.responses.push(response);
-            task.save(function (err) {
-              if (err)
-                throw err;
-            });
-          };
-          switch (task.type) {
-            case "buildbuilding":
-              console.log("Building task");
-              Client.buildAction(task.options, callback);
-              break;
-            case "buildtechno":
-              console.log("Searching task");
-              Client.searchAction(task.options, callback);
-              break;
-            case "buildship":
-              console.log("Ship Building task");
-              Client.buildShipAction(task.options, callback);
-              break;
-            case "loot":
-              console.log("Looting task");
-              Client.lootAction(task.options, callback);
-              break;
-          }
-        });
+        var callback = function(response) {
+          console.log("Task executed completly");
+          task.repeated++;
+          task.responses.push(response);
+          task.save(function (err) {
+            if (err)
+              throw err;
+          });
+        };
+        switch (task.type) {
+          case "buildbuilding":
+            console.log("Building task");
+            Client.buildAction(task.options, callback);
+            break;
+          case "buildtechno":
+            console.log("Searching task");
+            Client.searchAction(task.options, callback);
+            break;
+          case "buildship":
+            console.log("Ship Building task");
+            Client.buildShipAction(task.options, callback);
+            break;
+          case "loot":
+            console.log("Looting task");
+            Client.lootAction(task.options, callback);
+            break;
+        }
       });
     });
   }

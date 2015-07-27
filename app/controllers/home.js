@@ -27,13 +27,11 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/add-task', function (req, res, next) {
-  console.log(req.body);
+  // console.log(req.body);
   var date  = moment(req.body.executionTime, "DD/MM/YYYY HH:mm"),
     options = {
       baseId   : req.body.baseId
     };
-  console.log(date.toDate());
-  console.log(date.fromNow());
 
   switch (req.body.taskType) {
     case 'buildbuilding':
@@ -55,6 +53,8 @@ router.post('/add-task', function (req, res, next) {
       throw "Invalid task type";
   }
 
+  console.log(req.body.taskType + ' ' + date.fromNow());
+
   var task = new Task({
     type          : req.body.taskType,
     executionTime : date.toDate(),
@@ -66,7 +66,7 @@ router.post('/add-task', function (req, res, next) {
   task.save(function (err, task) {
     if (err)
       throw err;
-    console.log(task);
+    // console.log(task);
     var j = schedule.scheduleJob(date.toDate(), function(id){
         console.log('Executing task ' + id);
         Client.executeTask(id);
